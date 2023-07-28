@@ -1,6 +1,6 @@
 # 🦙 Llama Trainer Utility
 
-[![Upload to PyPi](https://github.com/Riccorl/llama-trainer/actions/workflows/python-publish.yml/badge.svg)](https://github.com/Riccorl/llama-trainer/actions/workflows/python-publish.yml)
+[![Upload to PyPi](https://github.com/Riccorl/llama-trainer/actions/workflows/python-publish-pypi.yml/badge.svg)](https://github.com/Riccorl/llama-trainer/actions/workflows/python-publish-pypi.yml)
 
 A "just few lines of code" utility for fine-tuning (not only) Llama models.
 
