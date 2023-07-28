@@ -28,7 +28,9 @@ formatting_func = to_instruction_fn
 
 output_dir = "llama-2-7b-hf-finetune"
 llama_trainer = LlamaTrainer(
-    model_name="meta-llama/Llama-2-7b-hf", dataset=dataset, formatting_func=formatting_func,
+    model_name="meta-llama/Llama-2-7b-hf", 
+    dataset=dataset, 
+    formatting_func=formatting_func,
     output_dir=output_dir
 )
 llama_trainer.train()
