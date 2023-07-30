@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 import torch
 from peft import AutoPeftModelForCausalLM
 from transformers import AutoTokenizer, PreTrainedModel, StoppingCriteriaList
@@ -37,14 +37,14 @@ class LlamaInfer:
 
     def __call__(
         self,
-        prompt: str,
+        prompt: Union[str, List[str]],
         do_sample: bool = True,
         max_new_tokens: int = 100,
         top_p: float = 0.9,
         temperature: float = 0.9,
         stop_token: Optional[Union[str, int]] = None,
         generation_kwargs: Dict[str, Any] = None,
-    ) -> Any:
+    ) -> List[str]:
         input_ids = self.tokenizer(
             prompt, return_tensors="pt", truncation=True
         ).input_ids
@@ -81,7 +81,5 @@ class LlamaInfer:
         }
         outputs = self.model.generate(**generation_kwargs)
         outputs = outputs.detach().cpu().numpy()
-        decoded = self.tokenizer.batch_decode(outputs, skip_special_tokens=True)[0][
-            len(prompt) :
-        ]
+        decoded = self.tokenizer.batch_decode(outputs, skip_special_tokens=True)
         return decoded

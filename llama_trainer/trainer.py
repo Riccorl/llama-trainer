@@ -47,7 +47,7 @@ class LlamaTrainer:
         bf16: bool = True,
         tf32: bool = True,
         use_flash_attn: bool = False,
-        packing: bool = True,
+        packing: bool = False,
         gradient_checkpointing: bool = True,
         optim: str = "paged_adamw_32bit",
         lr_scheduler_type: str = "constant",
@@ -104,6 +104,8 @@ class LlamaTrainer:
             output_dir = Path("output") / f"{self.model_name}"
         self.output_dir = Path(output_dir)
 
+        self.kwargs = kwargs
+
     def train(self):
         self.training_arguments = TrainingArguments(
             output_dir=self.output_dir,
@@ -117,6 +119,7 @@ class LlamaTrainer:
             bf16=self.bf16,
             tf32=self.tf32,
             max_grad_norm=self.max_grad_norm,
+            num_train_epochs=self.num_train_epochs,
             max_steps=self.max_steps,
             warmup_ratio=self.warmup_ratio,
             group_by_length=self.group_by_length,
@@ -153,6 +156,7 @@ class LlamaTrainer:
             dataset_text_field=self.dataset_text_field,
             formatting_func=self.formatting_func,
             packing=self.packing,
+            **self.kwargs,
         )
 
         self.trainer.train()
@@ -200,7 +204,6 @@ class LlamaTrainer:
 
         # Load the entire model on the GPU 0
         # switch to `device_map = "auto"` for multi-GPU
-        # device_map = {"": 0}
         device_map = device_map
 
         model = AutoModelForCausalLM.from_pretrained(
