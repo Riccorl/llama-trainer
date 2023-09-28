@@ -144,7 +144,7 @@ class LlamaTrainer:
             self.dataset = load_dataset(self.dataset, split="train")
 
         # Fix weird overflow issue with fp16 training
-        self.tokenizer.padding_side = "right"
+        # self.tokenizer.padding_side = "right"
 
         self.trainer = SFTTrainer(
             model=self.model,
@@ -175,6 +175,7 @@ class LlamaTrainer:
         use_nested_quant: bool = True,
         bnb_4bit_compute_dtype: str = "bfloat16",
         bnb_4bit_quant_type: str = "nf4",
+        pad_token_id: int = 0,
         device_map: Union[Dict[int, int], List[int], str] = "auto",
     ) -> Tuple[PreTrainedModel, PeftConfig, PreTrainedTokenizer]:
         compute_dtype = getattr(torch, bnb_4bit_compute_dtype)
@@ -233,7 +234,7 @@ class LlamaTrainer:
         )
 
         tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
-        tokenizer.pad_token = tokenizer.eos_token
+        tokenizer.pad_token_id = pad_token_id # tokenizer.eos_token
 
         # prepare model for training
         model = prepare_model_for_kbit_training(model)
